@@ -1,46 +1,87 @@
 const choices = ["rock", "paper", "scissor"];
 
-        let getplayerChoice = (+prompt("0 = Rock, 1 = Paper, 2 = Scissor"));
-        let playerSelection = choices[getplayerChoice];
 
-        let playerPoints = 0;
-        let computerPoints = 0;
+function getComputerSelection() {
+    return choices[Math.floor(Math.random() * choices.length)];
+}
+let roundCount = 0;
 
-        function getComputerSelection() {
-            return choices[Math.floor(Math.random() * choices.length)];
-        }
+function playRound(pSelection, getComputerSelection) {
+    
 
-        function playRound(playerSelection, getComputerSelection) {
-            if ((playerSelection === choices[0] && getComputerSelection === choices[2]) ||
-                playerSelection === choices[1] && getComputerSelection === choices[0] ||
-                playerSelection === choices[2] && getComputerSelection === choices[1]) {
-                console.log("\nYOU WIN!!! " + playerSelection.toUpperCase() + " beats " + getComputerSelection.toUpperCase());
-                ++playerPoints;
-            }
-            else if (playerSelection === getComputerSelection) {
-                console.log("\nIt's a TIE! You both chose " + playerSelection.toUpperCase() + "\n0 points awarded")
-            }
-            else {
-                console.log("\nYou LOSE!!! " + getComputerSelection.toUpperCase() + " beats " + playerSelection.toUpperCase());
-                ++computerPoints;
-            }
-        }
+    if ((pSelection === choices[0] && getComputerSelection === choices[2]) ||
+        pSelection === choices[1] && getComputerSelection === choices[0] ||
+        pSelection === choices[2] && getComputerSelection === choices[1]) {
+        console.log("\nYOU WIN!!!");
+        ++playerPoints;
 
-        function game() {
-            for (let i = 1; i <= 5; i++) {
-                getPlayerChoice = (+prompt("0 = Rock, 1 = Paper, 2 = Scissor"));
-                playRound(playerSelection, getComputerSelection());
-                console.log("Your Points: " + playerPoints + "\nComputer Player Points: " + computerPoints);
+    }
+    else if (pSelection === getComputerSelection) {
+        console.log("\nIT'S A TIE");
+    }
+    else {
+        console.log("\nYou LOSE!!! ");
+        ++computerPoints;
+    }
+    let msg = console.log("Computer: " + computerPoints + "\nYour Points: " + playerPoints);
 
-            }
-            if (playerPoints >= computerPoints) {
-                console.log("\n\nCONGRATULATIONS. You are the winner with: " + playerPoints + " Points");
-            }
-            else if (computerPoints >= playerPoints) {
-                console.log("\n\nBETTER LUCK NEXT TIME! You lost");
-            }
-            else {
-                console.log("\n\nNOT BAD. IT'S A TIE");
-            }
-        }
+    computerResults.textContent = "Computer: " + computerPoints;
+    playerResults.textContent = "Your Points: " + playerPoints;
+    resultsDiv.appendChild(playerResults);
+    resultsDiv.appendChild(computerResults);
+    
+    ++roundCount;
+    if (roundCount === 5 && playerPoints > computerPoints) {
+        alert("YOU WIN!");
+        return;
+    }
+    else if (roundCount === 5 && computerPoints > playerPoints) {
+        alert("YOU LOSE!");
+        return;
+    }
+    else if (roundCount === 5 && computerPoints === playerPoints) {
+        alert("OOPS! IT'S A TIE, TRY AGAIN");
+        return;
+    }
+}
+
+
+
+
+const resultsDiv = document.createElement('div');
+resultsDiv.classList.add("results");
+const computerResults = document.createElement('h5');
+const playerResults = document.createElement('h5');
+
+const buttons = document.createElement('div');
+const body = document.querySelector('body');
+
+const playerChoices = [];
+let playerSelection;
+let playerPoints = 0;
+let computerPoints = 0;
+
+
+for (let i = 0; i < 3; i++) {
+    const selectedBtn = document.createElement('button');
+    buttons.appendChild(selectedBtn);
+    selectedBtn.classList.add(`${choices[i]}`);
+    selectedBtn.textContent = `${choices[i].toUpperCase()}`;
+
+    playerSelection = selectedBtn.classList.value;
+    playerChoices[i] = playerSelection;
+
+    selectedBtn.addEventListener('click', () => {
+        let computerSelection = getComputerSelection();
+        playRound(playerSelection, computerSelection)
+    });
+
+}
+
+
+
+body.appendChild(buttons);
+body.appendChild(resultsDiv);
+
+
 
